@@ -2,6 +2,7 @@ asgiref==3.7.2
 boto3==1.29.6
 botocore==1.32.6
 Django==4.2.7
+django-countries==7.5.1
 django-storages==1.14.2
 djangorestframework==3.14.0
 jmespath==1.0.1

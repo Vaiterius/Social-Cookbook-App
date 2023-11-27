@@ -32,6 +32,7 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 INSTALLED_APPS = [
     'rest_framework',
     'storages',
+    'django_countries',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

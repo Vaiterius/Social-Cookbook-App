@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
+from apps.recipes.models import Recipe
+
 
 class UserManagerTests(TestCase):
 
@@ -33,7 +35,9 @@ class UserManagerTests(TestCase):
             email="super_user123@gmail.com",
             password="test123"
         )
-        self.assertEqual(admin_user.is_active)
+        self.assertEqual(admin_user.username, "super_user123")
+        self.assertEqual(admin_user.email, "super_user123@gmail.com")
+        self.assertTrue(admin_user.is_active)
         self.assertTrue(admin_user.is_staff)
         self.assertTrue(admin_user.is_superuser)
         with self.assertRaises(ValueError):
@@ -43,3 +47,4 @@ class UserManagerTests(TestCase):
                 password="test123", 
                 is_superuser=False
             )
+
