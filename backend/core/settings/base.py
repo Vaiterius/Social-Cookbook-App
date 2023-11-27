@@ -31,6 +31,7 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 
 INSTALLED_APPS = [
     'rest_framework',
+    'storages',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -100,6 +101,9 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+# Custom user model
+AUTH_USER_MODEL = "users.User"
 
 
 # Internationalization
