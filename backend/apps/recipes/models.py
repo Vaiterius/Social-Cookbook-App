@@ -1,28 +1,20 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from .managers import RecipeManager, InstructionManager, IngredientManager
-
-if TYPE_CHECKING:
-    from django.db.models import QuerySet
-
-
-# def upload_path(instance: Recipe, filename: str) -> str:
-#     id: int = instance.id
-#     return f"{settings.RECIPE_PICTURES_LOCATION}/recipe-{id}-{filename}"
+from .managers import (
+    RecipeManager, InstructionManager, IngredientManager, TagManager)
 
 
 class Recipe(models.Model):
-
-    class DifficultyLevels(models.TextChoices):
-        EASY = "EASY", _("Easy")
-        MEDIUM = "MEDIUM", _("Medium")
-        HARD = "HARD", _("Hard")
+    """
+    Stores a food recipe with basic info, authorship, and timestamps.
+    
+    Has relations to its list of instructions, ingredients, related tags, and
+    recipe pictures.
+    """
 
     name = models.CharField(_("Name of recipe"), max_length=75)
     description = models.CharField(_("Description of recipe"), max_length=250)
@@ -30,14 +22,6 @@ class Recipe(models.Model):
     cook_time = models.PositiveSmallIntegerField(_("Cook time"))
     notes = models.CharField(_("Author's notes"), max_length=250)
     servings = models.PositiveSmallIntegerField(_("Servings"))
-    difficulty = models.CharField(
-        _("Difficulty"), choices=DifficultyLevels.choices, max_length=6)
-    # TODO create an uploads app for recipe pictures.
-    # TODO create new relationship model to allow up to 5 recipe images.
-    # TODO change to s3 storage later.
-    # picture = models.ImageField(
-    #     _("Picture of prepared food"), upload_to=upload_path)
-    # alt_text = models.CharField(_("Alt text"), max_length=180)
     created_at = models.DateTimeField(_("Created at"), auto_now_add=True)
     last_updated = models.DateTimeField(_("Last updated"), auto_now=True)
 
@@ -46,6 +30,7 @@ class Recipe(models.Model):
         on_delete=models.CASCADE,
         related_name="recipes"
     )
+    tags = models.ManyToManyField("Tag", related_name="recipes")
 
     objects = RecipeManager()
 
@@ -54,6 +39,11 @@ class Recipe(models.Model):
 
 
 class Instruction(models.Model):
+    """
+    Stores a single instruction of a recipe with a step number to track its
+    position in the list.
+    """
+
     step = models.PositiveSmallIntegerField(_("Instruction step number"))
     description = models.CharField(
         _("Instruction description"), max_length=250)
@@ -68,6 +58,13 @@ class Instruction(models.Model):
 
 
 class Ingredient(models.Model):
+    """
+    Stores a single ingredient of a recipe comprised of the ingredient name,
+    amount, and unit measurement.
+    
+    Includes pre-defined options for quantity
+    amount and measurements, though the user may store their own custom value.
+    """
 
     class QuantityOptions(models.TextChoices):
         ONE_EIGHTH =   "0.125", "1/8"
@@ -141,4 +138,62 @@ class Ingredient(models.Model):
     
     def __str__(self) -> str:
         return f"{self.f_quantity} {self.f_measurement} {self.name}"
+
+
+class Tag(models.Model):
+    """
+    Stores a tag which attaches to a recipe in order to categorize them by
+    cuisine, courses, dietary preference, difficulty, and any custom,
+    user-defined ones.
+
+    Has a type defined to provide sorting functionalities.
+
+    Must use `get_or_create(name__iexact=<tag_name>)` when creating tags.
+    """
+
+    class Type(models.TextChoices):
+        DIETARY_PREFERENCE = "DIETARY_PREFERENCE", _("dietary preference")
+        COURSE = "COURSE", _("course")
+        DIFFICULTY = "DIFFICULTY", _("difficulty")
+        CUSTOM = "CUSTOM", _("custom")
+
+    class DietaryPreferenceOptions(models.TextChoices):
+        VEGETARIAN =  "VEGETARIAN", _("vegetarian")
+        VEGAN =       "VEGAN", _("vegan")
+        PALEO =       "PALEO", _("paleo")
+        KETO =        "KETO", _("keto"),
+        GLUTEN_FREE = "GLUTEN_FREE", _("gluten-free")
+        DAIRY_FREE =  "DAIRY_FREE", _("dairy-free")
+        NUT_FREE =    "NUT_FREE", _("nut-free")
+        LOW_CARB =    "LOW_CARB", _("low-carb")
+        LOW_FAT =     "LOW_FAT", _("low-fat")
+        LOW_FODMAP =  "LOW_FODMAP", _("low-FODMAP")
+        KOSHER =      "KOSHER", _("kosher")
+        HALAL =       "HALAL", _("halal")
+    
+    class CoursesOptions(models.TextChoices):
+        BREAKFAST = "BREAKFAST", _("breakfast")
+        LUNCH = "LUNCH", _("lunch")
+        DINNER = "DINNER", _("dinner")
+        APPETIZER = "APPETIZER", _("appetizer")
+        SNACK = "SNACK", _("snack")
+        DRINK = "DRINK", _("drink")
+    
+    class DifficultyOptions(models.TextChoices):
+        EASY = "EASY", _("easy")
+        MEDIUM = "MEDIUM", _("medium")
+        HARD = "HARD", _("hard")
+    
+    name = models.CharField(_("Tag name"), max_length=15)
+    tag_type = models.CharField(
+        _("Tag type"),
+        choices=Type.choices,
+        default=Type.CUSTOM,
+        max_length=20
+    )
+
+    objects = TagManager()
+
+    def __str__(self) -> str:
+        return self.name.lower()
 

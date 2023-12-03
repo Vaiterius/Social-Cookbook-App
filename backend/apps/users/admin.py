@@ -23,7 +23,6 @@ class UserAdmin(UserAdmin):
                 "password",
                 "bio",
                 "country",
-                "profile_picture"
             )
         }),
         ("Permissions", {
@@ -42,7 +41,6 @@ class UserAdmin(UserAdmin):
                 "password2",
                 "bio",
                 "country",
-                "profile_picture",
                 "is_staff",
                 "is_active",
                 "groups",
