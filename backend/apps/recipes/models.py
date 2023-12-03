@@ -12,15 +12,15 @@ class Recipe(models.Model):
     """
     Stores a food recipe with basic info, authorship, and timestamps.
     
-    Has relations to its list of instructions, ingredients, related tags, and
-    recipe pictures.
+    Has relations to its list of instructions, ingredients, related tags,
+    recipe pictures, likes, and comments.
     """
 
     name = models.CharField(_("Name of recipe"), max_length=75)
-    description = models.CharField(_("Description of recipe"), max_length=250)
+    description = models.TextField(_("Description of recipe"), max_length=500)
     prep_time = models.PositiveSmallIntegerField(_("Preparation time"))
     cook_time = models.PositiveSmallIntegerField(_("Cook time"))
-    notes = models.CharField(_("Author's notes"), max_length=250)
+    notes = models.TextField(_("Author's notes"), max_length=500)
     servings = models.PositiveSmallIntegerField(_("Servings"))
     created_at = models.DateTimeField(_("Created at"), auto_now_add=True)
     last_updated = models.DateTimeField(_("Last updated"), auto_now=True)

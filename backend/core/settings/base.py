@@ -33,14 +33,18 @@ INSTALLED_APPS = [
     'rest_framework',
     'storages',
     'django_countries',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'apps.users.apps.UsersConfig',
+
+    'apps.engagement.apps.EngagementConfig',
     'apps.recipes.apps.RecipesConfig',
+    'apps.uploads.apps.UploadsConfig',
+    'apps.users.apps.UsersConfig',
 ]
 
 MIDDLEWARE = [
