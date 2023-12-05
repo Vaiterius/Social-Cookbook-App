@@ -4,6 +4,18 @@ from django.test import TestCase
 from apps.recipes.models import Recipe
 
 
+class UserTests(TestCase):
+
+    def setUp(self):
+        pass
+
+    def test_following_system(self):
+        pass
+
+    def test_blocking_system(self):
+        pass
+
+
 class UserManagerTests(TestCase):
 
     def test_create_user(self):

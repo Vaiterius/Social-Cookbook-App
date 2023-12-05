@@ -6,7 +6,8 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.db.utils import IntegrityError
 
-from apps.recipes.models import Recipe, Instruction, Ingredient, Tag
+from apps.recipes.models import (
+    Recipe, Instruction, Ingredient, Tag, Cookbook)
 
 if TYPE_CHECKING:
     from apps.users.models import User
@@ -270,4 +271,10 @@ class TagTests(BaseRecipeTests):
         difficulty_tags = Tag.objects.by_type(Tag.Type.DIFFICULTY)
         for tag in difficulty_tags:
             self.assertEqual(tag.tag_type, Tag.Type.DIFFICULTY)
+
+
+class TestCookbooks(TestCase):
+    
+    def setUp(self):
+        pass
 

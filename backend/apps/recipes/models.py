@@ -22,6 +22,7 @@ class Recipe(models.Model):
     cook_time = models.PositiveSmallIntegerField(_("Cook time"))
     notes = models.TextField(_("Author's notes"), max_length=500)
     servings = models.PositiveSmallIntegerField(_("Servings"))
+    is_private = models.BooleanField(_("Recipe is private"), default=False)
     created_at = models.DateTimeField(_("Created at"), auto_now_add=True)
     last_updated = models.DateTimeField(_("Last updated"), auto_now=True)
 
@@ -196,4 +197,24 @@ class Tag(models.Model):
 
     def __str__(self) -> str:
         return self.name.lower()
+
+
+class Cookbook(models.Model):
+    """Store a collection with many recipes as a user cookbook"""
+
+    name = models.CharField(_("Name of cookbook"), max_length=75)
+    description = models.TextField(
+        _("Description of cookbook"), max_length=500)
+    is_private = models.BooleanField(_("Cookbook is private"), default=False)
+    created_at = models.DateTimeField(_("Created at"), auto_now_add=True)
+    last_updated = models.DateTimeField(_("Last updated"), auto_now=True)
+
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="cookbooks"
+    )
+    tags = models.ManyToManyField(Tag, related_name="associated_cookbooks")
+    recipes = models.ManyToManyField(
+        Recipe, related_name="included_in_cookbooks", blank=True)
 

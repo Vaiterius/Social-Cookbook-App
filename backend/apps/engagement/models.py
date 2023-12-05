@@ -44,6 +44,8 @@ class Comment(models.Model):
     created_at = models.DateTimeField(_("Created at"), auto_now_add=True)
     last_updated = models.DateTimeField(_("Last updated"), auto_now=True)
 
+    recipe = models.ForeignKey(
+        Recipe, on_delete=models.CASCADE, related_name="comments")
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,

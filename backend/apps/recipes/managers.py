@@ -36,3 +36,7 @@ class TagManager(models.Manager):
         """Return tags sorted by type"""
         return self.filter(tag_type=tag_type)
 
+
+class CookbookManager(models.Manager):
+    pass
+
