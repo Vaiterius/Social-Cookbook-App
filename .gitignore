@@ -1,0 +1,6 @@
+### Visual Studio Code ###
+.vscode/*
+
+# For other developers wanting to run this with their workspace in the root directory,
+# I've included the proper paths to Prettier configurations, if you have it installed.
+!.vscode/settings.json
