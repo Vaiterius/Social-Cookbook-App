@@ -1,9 +1,11 @@
+import React from "react";
+
 import { NavLink, Outlet } from "react-router-dom";
 
 /**
  * Root component that wraps around main content. Includes a sidebar.
  */
-export default function Root() {
+const Root: React.FC = () => {
 	return (
 		<>
 			<div id="sidebar">
@@ -32,4 +34,6 @@ export default function Root() {
 			</div>
 		</>
 	);
-}
+};
+
+export default Root;
