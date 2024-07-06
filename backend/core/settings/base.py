@@ -30,8 +30,8 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 # Application definition
 
 INSTALLED_APPS = [
-    'rest_framework',
     'storages',
+    'rest_framework',
     'django_countries',
 
     'django.contrib.admin',

@@ -4,12 +4,13 @@ import string
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
-from apps.recipes.models import Recipe
+from apps.users.models import User
 
 
 class UserTests(TestCase):
 
-    def _get_random_user(self):
+    @classmethod
+    def get_random_user(self):
         random_username: str = "".join(
             random.choice(string.ascii_letters + string.digits)
             for _ in range(8)
@@ -28,9 +29,9 @@ class UserTests(TestCase):
         )
 
     def test_following_system(self):
-        follower_1 = self._get_random_user()
-        follower_2 = self._get_random_user()
-        follower_3 = self._get_random_user()
+        follower_1 = self.get_random_user()
+        follower_2 = self.get_random_user()
+        follower_3 = self.get_random_user()
 
         # Test following.
         follower_1.follow(self.user)
@@ -68,9 +69,9 @@ class UserTests(TestCase):
 
 
     def test_blocking_system(self):
-        hater_1 = self._get_random_user()
-        hater_2 = self._get_random_user()
-        hater_3 = self._get_random_user()
+        hater_1 = self.get_random_user()
+        hater_2 = self.get_random_user()
+        hater_3 = self.get_random_user()
 
         self.assertTrue(not hater_1.has_blocked(self.user))
         self.assertTrue(not self.user.has_blocked(hater_1))
