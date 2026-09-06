@@ -13,6 +13,14 @@ import {
   varchar,
 } from 'drizzle-orm/pg-core'
 
+/*
+ * Soft deletion is parent-owned: deletedAt is null while a row is active.
+ * Application workflows must soft-delete a user's authored recipes/cookbooks
+ * on account deletion and hide dependent data through its deleted parent.
+ * Keep recipe fork connections for lineage, even when a recipe is deleted.
+ * Explicit ingredient, instruction, and association removals use hard deletes.
+ */
+
 /* USER MODEL */
 export const user = pgTable('user', {
   id: uuid('id').defaultRandom().primaryKey(),
@@ -31,6 +39,7 @@ export const user = pgTable('user', {
     .defaultNow()
     .$onUpdate(() => new Date())
     .notNull(),
+  deletedAt: timestamp('deleted_at', { withTimezone: true }),
 })
 
 /* RECIPE MODEL */
@@ -72,7 +81,9 @@ export const recipe = pgTable('recipe', {
     .notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true })
     .defaultNow()
+    .$onUpdate(() => new Date())
     .notNull(),
+  deletedAt: timestamp('deleted_at', { withTimezone: true }),
 })
 
 /* RECIPE INGREDIENT MODEL */
@@ -214,6 +225,7 @@ export const cookbookVisibility = pgEnum('cookbook_visibility', [
   'public',
   'private',
 ])
+export const cookbookStatus = pgEnum('cookbook_status', ['draft', 'published'])
 
 export const cookbook = pgTable('cookbook', {
   id: uuid('id').defaultRandom().primaryKey(),
@@ -224,6 +236,7 @@ export const cookbook = pgTable('cookbook', {
   caption: text('caption'),
   coverImageKey: text('cover_image_key'),
   visibility: cookbookVisibility('visibility').notNull(),
+  status: cookbookStatus('status').notNull(),
   createdAt: timestamp('created_at', { withTimezone: true })
     .defaultNow()
     .notNull(),
@@ -231,6 +244,7 @@ export const cookbook = pgTable('cookbook', {
     .defaultNow()
     .$onUpdate(() => new Date())
     .notNull(),
+  deletedAt: timestamp('deleted_at', { withTimezone: true }),
 })
 
 /* COOKBOOK RECIPE MODEL */
@@ -290,6 +304,67 @@ export const savedRecipe = pgTable(
   },
   (table) => [primaryKey({ columns: [table.userId, table.recipeId] })],
 )
+
+/* SAVED COOKBOOK MODEL */
+export const savedCookbook = pgTable(
+  'saved_cookbook',
+  {
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => user.id),
+    cookbookId: uuid('cookbook_id')
+      .notNull()
+      .references(() => cookbook.id),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [primaryKey({ columns: [table.userId, table.cookbookId] })],
+)
+
+/* RECIPE PERSONAL NOTE MODEL */
+export const recipePersonalNote = pgTable(
+  'recipe_personal_note',
+  {
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => user.id),
+    recipeId: uuid('recipe_id')
+      .notNull()
+      .references(() => recipe.id),
+    note: varchar('note', { length: 200 }).notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (table) => [primaryKey({ columns: [table.userId, table.recipeId] })],
+)
+
+/* ACTIVITY MODEL */
+export const activityType = pgEnum('activity_type', [
+  'recipe_published',
+  'cookbook_published',
+  'recipe_forked',
+  'recipe_added_to_cookbook',
+  'made_this',
+])
+
+export const activity = pgTable('activity', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  actorId: uuid('actor_id')
+    .notNull()
+    .references(() => user.id),
+  type: activityType('type').notNull(),
+  recipeId: uuid('recipe_id').references(() => recipe.id),
+  cookbookId: uuid('cookbook_id').references(() => cookbook.id),
+  createdAt: timestamp('created_at', { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+})
 
 /* MADE THIS MODEL */
 export const madeThis = pgTable(
