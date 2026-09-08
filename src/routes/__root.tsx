@@ -5,7 +5,6 @@ import {
 } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
-import Header from '../components/Header'
 
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 
@@ -38,6 +37,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       },
     ],
   }),
+  notFoundComponent: () => <p>Page not found.</p>,
   shellComponent: RootDocument,
 })
 
@@ -47,8 +47,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body className="min-h-screen font-sans antialiased [overflow-wrap:anywhere]">
-        <Header />
+      <body className="min-h-screen font-sans antialiased [wrap-anywhere]">
         {children}
         <TanStackDevtools
           config={{

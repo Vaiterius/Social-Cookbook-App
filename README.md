@@ -1,6 +1,6 @@
 # _sapori_ — a social recipe sharing app
 
-<small>"Flavours" in Italian, often used for the distinct tastes of food, dishes, or ingredients (singular: _sapore_).</small>
+<small>_"Flavours" in Italian, often used for the distinct tastes of food, dishes, or ingredients (singular: *sapore*)._</small>
 
 ## About
 

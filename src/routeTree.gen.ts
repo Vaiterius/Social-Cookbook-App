@@ -9,13 +9,96 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppRouteImport } from './routes/_app'
+import { Route as AppIndexRouteImport } from './routes/_app.index'
+import { Route as AppFollowingRouteImport } from './routes/_app.following'
+import { Route as AppLibraryRouteImport } from './routes/_app.library'
+import { Route as AppPrivacyRouteImport } from './routes/_app.privacy'
+import { Route as AppProfileRouteImport } from './routes/_app.profile'
+import { Route as AppSavedRouteImport } from './routes/_app.saved'
+import { Route as AppSettingsRouteImport } from './routes/_app.settings'
+import { Route as AppTermsRouteImport } from './routes/_app.terms'
+import { Route as AppLibraryIndexRouteImport } from './routes/_app.library.index'
+import { Route as AppLibraryCookbooksRouteImport } from './routes/_app.library.cookbooks'
+import { Route as AppLibraryRecipesRouteImport } from './routes/_app.library.recipes'
+import { Route as AppSavedIndexRouteImport } from './routes/_app.saved.index'
+import { Route as AppSavedCookbooksRouteImport } from './routes/_app.saved.cookbooks'
+import { Route as AppSavedRecipesRouteImport } from './routes/_app.saved.recipes'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
-const IndexRoute = IndexRouteImport.update({
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFollowingRoute = AppFollowingRouteImport.update({
+  id: '/following',
+  path: '/following',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLibraryRoute = AppLibraryRouteImport.update({
+  id: '/library',
+  path: '/library',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPrivacyRoute = AppPrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppProfileRoute = AppProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSavedRoute = AppSavedRouteImport.update({
+  id: '/saved',
+  path: '/saved',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTermsRoute = AppTermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLibraryIndexRoute = AppLibraryIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppLibraryRoute,
+} as any)
+const AppLibraryCookbooksRoute = AppLibraryCookbooksRouteImport.update({
+  id: '/cookbooks',
+  path: '/cookbooks',
+  getParentRoute: () => AppLibraryRoute,
+} as any)
+const AppLibraryRecipesRoute = AppLibraryRecipesRouteImport.update({
+  id: '/recipes',
+  path: '/recipes',
+  getParentRoute: () => AppLibraryRoute,
+} as any)
+const AppSavedIndexRoute = AppSavedIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppSavedRoute,
+} as any)
+const AppSavedCookbooksRoute = AppSavedCookbooksRouteImport.update({
+  id: '/cookbooks',
+  path: '/cookbooks',
+  getParentRoute: () => AppSavedRoute,
+} as any)
+const AppSavedRecipesRoute = AppSavedRecipesRouteImport.update({
+  id: '/recipes',
+  path: '/recipes',
+  getParentRoute: () => AppSavedRoute,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
@@ -24,39 +107,220 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof AppIndexRoute
+  '/following': typeof AppFollowingRoute
+  '/library': typeof AppLibraryRouteWithChildren
+  '/privacy': typeof AppPrivacyRoute
+  '/profile': typeof AppProfileRoute
+  '/saved': typeof AppSavedRouteWithChildren
+  '/settings': typeof AppSettingsRoute
+  '/terms': typeof AppTermsRoute
+  '/library/cookbooks': typeof AppLibraryCookbooksRoute
+  '/library/recipes': typeof AppLibraryRecipesRoute
+  '/saved/cookbooks': typeof AppSavedCookbooksRoute
+  '/saved/recipes': typeof AppSavedRecipesRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/library/': typeof AppLibraryIndexRoute
+  '/saved/': typeof AppSavedIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/following': typeof AppFollowingRoute
+  '/privacy': typeof AppPrivacyRoute
+  '/profile': typeof AppProfileRoute
+  '/settings': typeof AppSettingsRoute
+  '/terms': typeof AppTermsRoute
+  '/': typeof AppIndexRoute
+  '/library/cookbooks': typeof AppLibraryCookbooksRoute
+  '/library/recipes': typeof AppLibraryRecipesRoute
+  '/saved/cookbooks': typeof AppSavedCookbooksRoute
+  '/saved/recipes': typeof AppSavedRecipesRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/library': typeof AppLibraryIndexRoute
+  '/saved': typeof AppSavedIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_app': typeof AppRouteWithChildren
+  '/_app/following': typeof AppFollowingRoute
+  '/_app/library': typeof AppLibraryRouteWithChildren
+  '/_app/privacy': typeof AppPrivacyRoute
+  '/_app/profile': typeof AppProfileRoute
+  '/_app/saved': typeof AppSavedRouteWithChildren
+  '/_app/settings': typeof AppSettingsRoute
+  '/_app/terms': typeof AppTermsRoute
+  '/_app/': typeof AppIndexRoute
+  '/_app/library/cookbooks': typeof AppLibraryCookbooksRoute
+  '/_app/library/recipes': typeof AppLibraryRecipesRoute
+  '/_app/saved/cookbooks': typeof AppSavedCookbooksRoute
+  '/_app/saved/recipes': typeof AppSavedRecipesRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/_app/library/': typeof AppLibraryIndexRoute
+  '/_app/saved/': typeof AppSavedIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/api/auth/$'
+  fullPaths:
+    | '/'
+    | '/following'
+    | '/library'
+    | '/privacy'
+    | '/profile'
+    | '/saved'
+    | '/settings'
+    | '/terms'
+    | '/library/cookbooks'
+    | '/library/recipes'
+    | '/saved/cookbooks'
+    | '/saved/recipes'
+    | '/api/auth/$'
+    | '/library/'
+    | '/saved/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/auth/$'
-  id: '__root__' | '/' | '/api/auth/$'
+  to:
+    | '/following'
+    | '/privacy'
+    | '/profile'
+    | '/settings'
+    | '/terms'
+    | '/'
+    | '/library/cookbooks'
+    | '/library/recipes'
+    | '/saved/cookbooks'
+    | '/saved/recipes'
+    | '/api/auth/$'
+    | '/library'
+    | '/saved'
+  id:
+    | '__root__'
+    | '/_app'
+    | '/_app/following'
+    | '/_app/library'
+    | '/_app/privacy'
+    | '/_app/profile'
+    | '/_app/saved'
+    | '/_app/settings'
+    | '/_app/terms'
+    | '/_app/'
+    | '/_app/library/cookbooks'
+    | '/_app/library/recipes'
+    | '/_app/saved/cookbooks'
+    | '/_app/saved/recipes'
+    | '/api/auth/$'
+    | '/_app/library/'
+    | '/_app/saved/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app/': {
+      id: '/_app/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/following': {
+      id: '/_app/following'
+      path: '/following'
+      fullPath: '/following'
+      preLoaderRoute: typeof AppFollowingRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/library': {
+      id: '/_app/library'
+      path: '/library'
+      fullPath: '/library'
+      preLoaderRoute: typeof AppLibraryRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/privacy': {
+      id: '/_app/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof AppPrivacyRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/profile': {
+      id: '/_app/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AppProfileRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/saved': {
+      id: '/_app/saved'
+      path: '/saved'
+      fullPath: '/saved'
+      preLoaderRoute: typeof AppSavedRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings': {
+      id: '/_app/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/terms': {
+      id: '/_app/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof AppTermsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/library/': {
+      id: '/_app/library/'
+      path: '/'
+      fullPath: '/library/'
+      preLoaderRoute: typeof AppLibraryIndexRouteImport
+      parentRoute: typeof AppLibraryRoute
+    }
+    '/_app/library/cookbooks': {
+      id: '/_app/library/cookbooks'
+      path: '/cookbooks'
+      fullPath: '/library/cookbooks'
+      preLoaderRoute: typeof AppLibraryCookbooksRouteImport
+      parentRoute: typeof AppLibraryRoute
+    }
+    '/_app/library/recipes': {
+      id: '/_app/library/recipes'
+      path: '/recipes'
+      fullPath: '/library/recipes'
+      preLoaderRoute: typeof AppLibraryRecipesRouteImport
+      parentRoute: typeof AppLibraryRoute
+    }
+    '/_app/saved/': {
+      id: '/_app/saved/'
+      path: '/'
+      fullPath: '/saved/'
+      preLoaderRoute: typeof AppSavedIndexRouteImport
+      parentRoute: typeof AppSavedRoute
+    }
+    '/_app/saved/cookbooks': {
+      id: '/_app/saved/cookbooks'
+      path: '/cookbooks'
+      fullPath: '/saved/cookbooks'
+      preLoaderRoute: typeof AppSavedCookbooksRouteImport
+      parentRoute: typeof AppSavedRoute
+    }
+    '/_app/saved/recipes': {
+      id: '/_app/saved/recipes'
+      path: '/recipes'
+      fullPath: '/saved/recipes'
+      preLoaderRoute: typeof AppSavedRecipesRouteImport
+      parentRoute: typeof AppSavedRoute
     }
     '/api/auth/$': {
       id: '/api/auth/$'
@@ -68,8 +332,64 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AppLibraryRouteChildren {
+  AppLibraryCookbooksRoute: typeof AppLibraryCookbooksRoute
+  AppLibraryRecipesRoute: typeof AppLibraryRecipesRoute
+  AppLibraryIndexRoute: typeof AppLibraryIndexRoute
+}
+
+const AppLibraryRouteChildren: AppLibraryRouteChildren = {
+  AppLibraryCookbooksRoute: AppLibraryCookbooksRoute,
+  AppLibraryRecipesRoute: AppLibraryRecipesRoute,
+  AppLibraryIndexRoute: AppLibraryIndexRoute,
+}
+
+const AppLibraryRouteWithChildren = AppLibraryRoute._addFileChildren(
+  AppLibraryRouteChildren,
+)
+
+interface AppSavedRouteChildren {
+  AppSavedCookbooksRoute: typeof AppSavedCookbooksRoute
+  AppSavedRecipesRoute: typeof AppSavedRecipesRoute
+  AppSavedIndexRoute: typeof AppSavedIndexRoute
+}
+
+const AppSavedRouteChildren: AppSavedRouteChildren = {
+  AppSavedCookbooksRoute: AppSavedCookbooksRoute,
+  AppSavedRecipesRoute: AppSavedRecipesRoute,
+  AppSavedIndexRoute: AppSavedIndexRoute,
+}
+
+const AppSavedRouteWithChildren = AppSavedRoute._addFileChildren(
+  AppSavedRouteChildren,
+)
+
+interface AppRouteChildren {
+  AppFollowingRoute: typeof AppFollowingRoute
+  AppLibraryRoute: typeof AppLibraryRouteWithChildren
+  AppPrivacyRoute: typeof AppPrivacyRoute
+  AppProfileRoute: typeof AppProfileRoute
+  AppSavedRoute: typeof AppSavedRouteWithChildren
+  AppSettingsRoute: typeof AppSettingsRoute
+  AppTermsRoute: typeof AppTermsRoute
+  AppIndexRoute: typeof AppIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppFollowingRoute: AppFollowingRoute,
+  AppLibraryRoute: AppLibraryRouteWithChildren,
+  AppPrivacyRoute: AppPrivacyRoute,
+  AppProfileRoute: AppProfileRoute,
+  AppSavedRoute: AppSavedRouteWithChildren,
+  AppSettingsRoute: AppSettingsRoute,
+  AppTermsRoute: AppTermsRoute,
+  AppIndexRoute: AppIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
