@@ -5,5 +5,5 @@ export const Route = createFileRoute('/_app/saved/recipes')({
 })
 
 function SavedRecipesPage() {
-  return <h1>Saved Recipes</h1>
+  return <p>Viewing all recipes...</p>
 }

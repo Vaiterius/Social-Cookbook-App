@@ -8,8 +8,8 @@ export const Route = createFileRoute('/_app/following')({
 function FollowingPage() {
   return (
     <>
-      <h1>Following</h1>
       <FeedNavigation />
+      <p>Viewing following feed...</p>
     </>
   )
 }

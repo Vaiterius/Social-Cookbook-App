@@ -9,10 +9,10 @@ export default function AccountNavigation() {
           <Link to="/settings">Settings</Link>
         </li>
         <li>
-          <Link to="/terms">Terms of service</Link>
+          <Link to="/terms-of-use">Terms of Use</Link>
         </li>
         <li>
-          <Link to="/privacy">Privacy policy</Link>
+          <Link to="/privacy-policy">Privacy Policy</Link>
         </li>
         <li>
           <LogoutPlaceholder />

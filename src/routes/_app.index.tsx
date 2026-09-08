@@ -6,8 +6,8 @@ export const Route = createFileRoute('/_app/')({ component: HomePage })
 function HomePage() {
   return (
     <>
-      <h1>Explore</h1>
       <FeedNavigation />
+      <p>Viewing explore feed...</p>
     </>
   )
 }

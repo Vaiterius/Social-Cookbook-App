@@ -13,11 +13,11 @@ import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppIndexRouteImport } from './routes/_app.index'
 import { Route as AppFollowingRouteImport } from './routes/_app.following'
 import { Route as AppLibraryRouteImport } from './routes/_app.library'
-import { Route as AppPrivacyRouteImport } from './routes/_app.privacy'
+import { Route as AppPrivacyPolicyRouteImport } from './routes/_app.privacy-policy'
 import { Route as AppProfileRouteImport } from './routes/_app.profile'
 import { Route as AppSavedRouteImport } from './routes/_app.saved'
 import { Route as AppSettingsRouteImport } from './routes/_app.settings'
-import { Route as AppTermsRouteImport } from './routes/_app.terms'
+import { Route as AppTermsOfUseRouteImport } from './routes/_app.terms-of-use'
 import { Route as AppLibraryIndexRouteImport } from './routes/_app.library.index'
 import { Route as AppLibraryCookbooksRouteImport } from './routes/_app.library.cookbooks'
 import { Route as AppLibraryRecipesRouteImport } from './routes/_app.library.recipes'
@@ -45,9 +45,9 @@ const AppLibraryRoute = AppLibraryRouteImport.update({
   path: '/library',
   getParentRoute: () => AppRoute,
 } as any)
-const AppPrivacyRoute = AppPrivacyRouteImport.update({
-  id: '/privacy',
-  path: '/privacy',
+const AppPrivacyPolicyRoute = AppPrivacyPolicyRouteImport.update({
+  id: '/privacy-policy',
+  path: '/privacy-policy',
   getParentRoute: () => AppRoute,
 } as any)
 const AppProfileRoute = AppProfileRouteImport.update({
@@ -65,9 +65,9 @@ const AppSettingsRoute = AppSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AppRoute,
 } as any)
-const AppTermsRoute = AppTermsRouteImport.update({
-  id: '/terms',
-  path: '/terms',
+const AppTermsOfUseRoute = AppTermsOfUseRouteImport.update({
+  id: '/terms-of-use',
+  path: '/terms-of-use',
   getParentRoute: () => AppRoute,
 } as any)
 const AppLibraryIndexRoute = AppLibraryIndexRouteImport.update({
@@ -110,11 +110,11 @@ export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/following': typeof AppFollowingRoute
   '/library': typeof AppLibraryRouteWithChildren
-  '/privacy': typeof AppPrivacyRoute
+  '/privacy-policy': typeof AppPrivacyPolicyRoute
   '/profile': typeof AppProfileRoute
   '/saved': typeof AppSavedRouteWithChildren
   '/settings': typeof AppSettingsRoute
-  '/terms': typeof AppTermsRoute
+  '/terms-of-use': typeof AppTermsOfUseRoute
   '/library/cookbooks': typeof AppLibraryCookbooksRoute
   '/library/recipes': typeof AppLibraryRecipesRoute
   '/saved/cookbooks': typeof AppSavedCookbooksRoute
@@ -125,10 +125,10 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/following': typeof AppFollowingRoute
-  '/privacy': typeof AppPrivacyRoute
+  '/privacy-policy': typeof AppPrivacyPolicyRoute
   '/profile': typeof AppProfileRoute
   '/settings': typeof AppSettingsRoute
-  '/terms': typeof AppTermsRoute
+  '/terms-of-use': typeof AppTermsOfUseRoute
   '/': typeof AppIndexRoute
   '/library/cookbooks': typeof AppLibraryCookbooksRoute
   '/library/recipes': typeof AppLibraryRecipesRoute
@@ -143,11 +143,11 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteWithChildren
   '/_app/following': typeof AppFollowingRoute
   '/_app/library': typeof AppLibraryRouteWithChildren
-  '/_app/privacy': typeof AppPrivacyRoute
+  '/_app/privacy-policy': typeof AppPrivacyPolicyRoute
   '/_app/profile': typeof AppProfileRoute
   '/_app/saved': typeof AppSavedRouteWithChildren
   '/_app/settings': typeof AppSettingsRoute
-  '/_app/terms': typeof AppTermsRoute
+  '/_app/terms-of-use': typeof AppTermsOfUseRoute
   '/_app/': typeof AppIndexRoute
   '/_app/library/cookbooks': typeof AppLibraryCookbooksRoute
   '/_app/library/recipes': typeof AppLibraryRecipesRoute
@@ -163,11 +163,11 @@ export interface FileRouteTypes {
     | '/'
     | '/following'
     | '/library'
-    | '/privacy'
+    | '/privacy-policy'
     | '/profile'
     | '/saved'
     | '/settings'
-    | '/terms'
+    | '/terms-of-use'
     | '/library/cookbooks'
     | '/library/recipes'
     | '/saved/cookbooks'
@@ -178,10 +178,10 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/following'
-    | '/privacy'
+    | '/privacy-policy'
     | '/profile'
     | '/settings'
-    | '/terms'
+    | '/terms-of-use'
     | '/'
     | '/library/cookbooks'
     | '/library/recipes'
@@ -195,11 +195,11 @@ export interface FileRouteTypes {
     | '/_app'
     | '/_app/following'
     | '/_app/library'
-    | '/_app/privacy'
+    | '/_app/privacy-policy'
     | '/_app/profile'
     | '/_app/saved'
     | '/_app/settings'
-    | '/_app/terms'
+    | '/_app/terms-of-use'
     | '/_app/'
     | '/_app/library/cookbooks'
     | '/_app/library/recipes'
@@ -245,11 +245,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppLibraryRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/privacy': {
-      id: '/_app/privacy'
-      path: '/privacy'
-      fullPath: '/privacy'
-      preLoaderRoute: typeof AppPrivacyRouteImport
+    '/_app/privacy-policy': {
+      id: '/_app/privacy-policy'
+      path: '/privacy-policy'
+      fullPath: '/privacy-policy'
+      preLoaderRoute: typeof AppPrivacyPolicyRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/profile': {
@@ -273,11 +273,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/terms': {
-      id: '/_app/terms'
-      path: '/terms'
-      fullPath: '/terms'
-      preLoaderRoute: typeof AppTermsRouteImport
+    '/_app/terms-of-use': {
+      id: '/_app/terms-of-use'
+      path: '/terms-of-use'
+      fullPath: '/terms-of-use'
+      preLoaderRoute: typeof AppTermsOfUseRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/library/': {
@@ -367,22 +367,22 @@ const AppSavedRouteWithChildren = AppSavedRoute._addFileChildren(
 interface AppRouteChildren {
   AppFollowingRoute: typeof AppFollowingRoute
   AppLibraryRoute: typeof AppLibraryRouteWithChildren
-  AppPrivacyRoute: typeof AppPrivacyRoute
+  AppPrivacyPolicyRoute: typeof AppPrivacyPolicyRoute
   AppProfileRoute: typeof AppProfileRoute
   AppSavedRoute: typeof AppSavedRouteWithChildren
   AppSettingsRoute: typeof AppSettingsRoute
-  AppTermsRoute: typeof AppTermsRoute
+  AppTermsOfUseRoute: typeof AppTermsOfUseRoute
   AppIndexRoute: typeof AppIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppFollowingRoute: AppFollowingRoute,
   AppLibraryRoute: AppLibraryRouteWithChildren,
-  AppPrivacyRoute: AppPrivacyRoute,
+  AppPrivacyPolicyRoute: AppPrivacyPolicyRoute,
   AppProfileRoute: AppProfileRoute,
   AppSavedRoute: AppSavedRouteWithChildren,
   AppSettingsRoute: AppSettingsRoute,
-  AppTermsRoute: AppTermsRoute,
+  AppTermsOfUseRoute: AppTermsOfUseRoute,
   AppIndexRoute: AppIndexRoute,
 }
 
