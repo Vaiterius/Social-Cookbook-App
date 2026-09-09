@@ -8,5 +8,8 @@ _**sapori**_ is a social recipe-keeping app designed around creating personal re
 
 ## Contributing
 
+See the [database setup guide](docs/database.md) for local PostgreSQL startup,
+migrations, and preparing remote test and production environments.
+
 See the [project structure guide](docs/project-structure.md) for folder
 responsibilities and client/server boundaries.
