@@ -191,6 +191,23 @@ export const recipeInstruction = pgTable('recipe_instruction', {
   imageKey: text('image_key'),
 })
 
+/* RECIPE INSTRUCTION INGREDIENT MODEL */
+export const recipeInstructionIngredient = pgTable(
+  'recipe_instruction_ingredient',
+  {
+    instructionId: uuid('instruction_id')
+      .notNull()
+      .references(() => recipeInstruction.id),
+    ingredientId: uuid('ingredient_id')
+      .notNull()
+      .references(() => recipeIngredient.id),
+    quantityUsed: numeric('quantity_used'),
+  },
+  (table) => [
+    primaryKey({ columns: [table.instructionId, table.ingredientId] }),
+  ],
+)
+
 /* CUSTOM TAG MODEL */
 export const customTag = pgTable(
   'custom_tag',
