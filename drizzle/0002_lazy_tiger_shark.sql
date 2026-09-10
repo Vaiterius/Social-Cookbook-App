@@ -1,0 +1,2 @@
+CREATE INDEX "recipe_ingredient_recipe_sort_idx" ON "recipe_ingredient" USING btree ("recipe_id","sort_order");--> statement-breakpoint
+CREATE INDEX "recipe_instruction_recipe_sort_idx" ON "recipe_instruction" USING btree ("recipe_id","sort_order");

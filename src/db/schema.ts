@@ -2,6 +2,7 @@ import { sql } from 'drizzle-orm'
 import {
   boolean,
   check,
+  index,
   integer,
   numeric,
   pgEnum,
@@ -87,16 +88,23 @@ export const recipe = pgTable('recipe', {
 })
 
 /* RECIPE INGREDIENT MODEL */
-export const recipeIngredient = pgTable('recipe_ingredient', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  recipeId: uuid('recipe_id')
-    .notNull()
-    .references(() => recipe.id),
-  name: text('name').notNull(),
-  quantity: numeric('quantity'),
-  unit: text('unit'),
-  sortOrder: integer('sort_order').notNull(),
-})
+export const recipeIngredient = pgTable(
+  'recipe_ingredient',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    recipeId: uuid('recipe_id')
+      .notNull()
+      .references(() => recipe.id),
+    name: text('name').notNull(),
+    quantity: numeric('quantity'),
+    unit: text('unit'),
+    sortOrder: integer('sort_order').notNull(),
+  },
+  (table) => [
+    // Recipe detail reads filter by recipe first, then walk ingredients in display order.
+    index('recipe_ingredient_recipe_sort_idx').on(table.recipeId, table.sortOrder),
+  ],
+)
 
 /* COURSE MODEL */
 export const course = pgTable('course', {
@@ -181,15 +189,21 @@ export const recipeDiscoveryTag = pgTable(
 )
 
 /* RECIPE INSTRUCTION MODEL */
-export const recipeInstruction = pgTable('recipe_instruction', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  recipeId: uuid('recipe_id')
-    .notNull()
-    .references(() => recipe.id),
-  sortOrder: integer('sort_order').notNull(),
-  text: varchar('text', { length: 500 }).notNull(),
-  imageKey: text('image_key'),
-})
+export const recipeInstruction = pgTable(
+  'recipe_instruction',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    recipeId: uuid('recipe_id')
+      .notNull()
+      .references(() => recipe.id),
+    sortOrder: integer('sort_order').notNull(),
+    text: varchar('text', { length: 500 }).notNull(),
+    imageKey: text('image_key'),
+  },
+  (table) => [
+    index('recipe_instruction_recipe_sort_idx').on(table.recipeId, table.sortOrder),
+  ],
+)
 
 /* RECIPE INSTRUCTION INGREDIENT MODEL */
 export const recipeInstructionIngredient = pgTable(

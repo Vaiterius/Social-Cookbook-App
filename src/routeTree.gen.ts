@@ -25,6 +25,7 @@ import { Route as AppSavedIndexRouteImport } from './routes/_app.saved.index'
 import { Route as AppSavedCookbooksRouteImport } from './routes/_app.saved.cookbooks'
 import { Route as AppSavedRecipesRouteImport } from './routes/_app.saved.recipes'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as AppRecipesRecipeIdSlugRouteImport } from './routes/_app.recipes.$recipeId.$slug'
 
 const AppRoute = AppRouteImport.update({
   id: '/_app',
@@ -105,6 +106,11 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppRecipesRecipeIdSlugRoute = AppRecipesRecipeIdSlugRouteImport.update({
+  id: '/recipes/$recipeId/$slug',
+  path: '/recipes/$recipeId/$slug',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
@@ -122,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/library/': typeof AppLibraryIndexRoute
   '/saved/': typeof AppSavedIndexRoute
+  '/recipes/$recipeId/$slug': typeof AppRecipesRecipeIdSlugRoute
 }
 export interface FileRoutesByTo {
   '/following': typeof AppFollowingRoute
@@ -137,6 +144,7 @@ export interface FileRoutesByTo {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/library': typeof AppLibraryIndexRoute
   '/saved': typeof AppSavedIndexRoute
+  '/recipes/$recipeId/$slug': typeof AppRecipesRecipeIdSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -156,6 +164,7 @@ export interface FileRoutesById {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_app/library/': typeof AppLibraryIndexRoute
   '/_app/saved/': typeof AppSavedIndexRoute
+  '/_app/recipes/$recipeId/$slug': typeof AppRecipesRecipeIdSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -175,6 +184,7 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/library/'
     | '/saved/'
+    | '/recipes/$recipeId/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/following'
@@ -190,6 +200,7 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/library'
     | '/saved'
+    | '/recipes/$recipeId/$slug'
   id:
     | '__root__'
     | '/_app'
@@ -208,6 +219,7 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/_app/library/'
     | '/_app/saved/'
+    | '/_app/recipes/$recipeId/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -329,6 +341,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/recipes/$recipeId/$slug': {
+      id: '/_app/recipes/$recipeId/$slug'
+      path: '/recipes/$recipeId/$slug'
+      fullPath: '/recipes/$recipeId/$slug'
+      preLoaderRoute: typeof AppRecipesRecipeIdSlugRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
@@ -373,6 +392,7 @@ interface AppRouteChildren {
   AppSettingsRoute: typeof AppSettingsRoute
   AppTermsOfUseRoute: typeof AppTermsOfUseRoute
   AppIndexRoute: typeof AppIndexRoute
+  AppRecipesRecipeIdSlugRoute: typeof AppRecipesRecipeIdSlugRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -384,6 +404,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSettingsRoute: AppSettingsRoute,
   AppTermsOfUseRoute: AppTermsOfUseRoute,
   AppIndexRoute: AppIndexRoute,
+  AppRecipesRecipeIdSlugRoute: AppRecipesRecipeIdSlugRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)

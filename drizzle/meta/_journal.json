@@ -15,6 +15,13 @@
       "when": 1789026612871,
       "tag": "0001_mute_madame_web",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1789028389847,
+      "tag": "0002_lazy_tiger_shark",
+      "breakpoints": true
     }
   ]
 }
