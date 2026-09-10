@@ -56,6 +56,34 @@ empty volume; editing `.env.local` does not change an existing database password
 Do not change the PostgreSQL major image version on an existing volume without
 planning a database upgrade.
 
+## Visual testing fixtures
+
+With the local database running and migrations applied:
+
+```sh
+npm run db:seed        # Create or replace the sample data; prints recipe URLs
+npm run db:seed:clear  # Delete the sample users, recipes, and their detail data
+npm run db:seed        # Recreate them with the same user and recipe IDs
+```
+
+The seed creates Maya Santos, Leo Rivera, and Sam Chen, plus five recipes:
+Spicy Chicken Adobo (full details), Mushroom Adobo (a fork), Simple Toast (empty
+collections and optional fields), Private Family Soup, and Unfinished Pancakes.
+The last two should show “Recipe not found” to anonymous visitors. Image keys
+are placeholders for plain-text display; no image files are created.
+
+Leo has saved and made the chicken adobo and has a personal note. These users
+are database fixtures, not login accounts: until auth is connected, the browser
+will show “Not signed in” for viewer state.
+
+The script reads `.env.local`, then `.env`, with exported variables taking
+precedence. It only accepts a local `sapori_dev` database and refuses production
+mode. Replacement runs in a transaction and includes a small relational smoke
+check. Cleanup targets reserved fixture IDs rather than truncating tables;
+unexpected foreign-key references abort and roll back the operation. Shared
+taxonomy names (Dinner, Filipino, Vegetarian, Comfort food) are reused and
+retained after cleanup.
+
 ## Schema changes
 
 After editing `src/db/schema.ts`:
