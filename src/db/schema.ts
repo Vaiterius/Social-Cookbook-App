@@ -102,15 +102,24 @@ export const recipeIngredient = pgTable(
   },
   (table) => [
     // Recipe detail reads filter by recipe first, then walk ingredients in display order.
-    index('recipe_ingredient_recipe_sort_idx').on(table.recipeId, table.sortOrder),
+    index('recipe_ingredient_recipe_sort_idx').on(
+      table.recipeId,
+      table.sortOrder,
+    ),
   ],
 )
 
 /* COURSE MODEL */
-export const course = pgTable('course', {
-  id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
-  name: text('name').notNull().unique(),
-})
+export const course = pgTable(
+  'course',
+  {
+    id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
+    name: text('name').notNull().unique(),
+  },
+  (table) => [
+    check('course_name_lowercase', sql`${table.name} = lower(${table.name})`),
+  ],
+)
 
 /* RECIPE COURSE MODEL */
 export const recipeCourse = pgTable(
@@ -127,10 +136,16 @@ export const recipeCourse = pgTable(
 )
 
 /* CUISINE MODEL */
-export const cuisine = pgTable('cuisine', {
-  id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
-  name: text('name').notNull().unique(),
-})
+export const cuisine = pgTable(
+  'cuisine',
+  {
+    id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
+    name: text('name').notNull().unique(),
+  },
+  (table) => [
+    check('cuisine_name_lowercase', sql`${table.name} = lower(${table.name})`),
+  ],
+)
 
 /* RECIPE CUISINE MODEL */
 export const recipeCuisine = pgTable(
@@ -147,10 +162,19 @@ export const recipeCuisine = pgTable(
 )
 
 /* DIETARY PREFERENCE MODEL */
-export const dietaryPreference = pgTable('dietary_preference', {
-  id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
-  name: text('name').notNull().unique(),
-})
+export const dietaryPreference = pgTable(
+  'dietary_preference',
+  {
+    id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
+    name: text('name').notNull().unique(),
+  },
+  (table) => [
+    check(
+      'dietary_preference_name_lowercase',
+      sql`${table.name} = lower(${table.name})`,
+    ),
+  ],
+)
 
 /* RECIPE DIETARY PREFERENCE MODEL */
 export const recipeDietaryPreference = pgTable(
@@ -169,10 +193,19 @@ export const recipeDietaryPreference = pgTable(
 )
 
 /* DISCOVERY TAG MODEL */
-export const discoveryTag = pgTable('discovery_tag', {
-  id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
-  name: text('name').notNull().unique(),
-})
+export const discoveryTag = pgTable(
+  'discovery_tag',
+  {
+    id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
+    name: text('name').notNull().unique(),
+  },
+  (table) => [
+    check(
+      'discovery_tag_name_lowercase',
+      sql`${table.name} = lower(${table.name})`,
+    ),
+  ],
+)
 
 /* RECIPE DISCOVERY TAG MODEL */
 export const recipeDiscoveryTag = pgTable(
@@ -201,7 +234,10 @@ export const recipeInstruction = pgTable(
     imageKey: text('image_key'),
   },
   (table) => [
-    index('recipe_instruction_recipe_sort_idx').on(table.recipeId, table.sortOrder),
+    index('recipe_instruction_recipe_sort_idx').on(
+      table.recipeId,
+      table.sortOrder,
+    ),
   ],
 )
 

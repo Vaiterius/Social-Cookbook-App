@@ -208,39 +208,34 @@ try {
       ])
     }
 
-    // Taxonomy is shared data: reuse names and retain it when fixtures are cleared.
-    await tx
-      .insert(schema.course)
-      .values({ name: 'Dinner' })
-      .onConflictDoNothing()
-    await tx
-      .insert(schema.cuisine)
-      .values({ name: 'Filipino' })
-      .onConflictDoNothing()
-    await tx
-      .insert(schema.dietaryPreference)
-      .values({ name: 'Vegetarian' })
-      .onConflictDoNothing()
-    await tx
-      .insert(schema.discoveryTag)
-      .values({ name: 'Comfort food' })
-      .onConflictDoNothing()
-    const [course] = await tx
-      .select()
-      .from(schema.course)
-      .where(eq(schema.course.name, 'Dinner'))
-    const [cuisine] = await tx
-      .select()
-      .from(schema.cuisine)
-      .where(eq(schema.cuisine.name, 'Filipino'))
-    const [diet] = await tx
-      .select()
-      .from(schema.dietaryPreference)
-      .where(eq(schema.dietaryPreference.name, 'Vegetarian'))
-    const [tag] = await tx
-      .select()
-      .from(schema.discoveryTag)
-      .where(eq(schema.discoveryTag.name, 'Comfort food'))
+    const course = (
+      await tx
+        .select()
+        .from(schema.course)
+        .where(eq(schema.course.name, 'dinner'))
+    ).at(0)
+    const cuisine = (
+      await tx
+        .select()
+        .from(schema.cuisine)
+        .where(eq(schema.cuisine.name, 'filipino'))
+    ).at(0)
+    const diet = (
+      await tx
+        .select()
+        .from(schema.dietaryPreference)
+        .where(eq(schema.dietaryPreference.name, 'vegetarian'))
+    ).at(0)
+    const tag = (
+      await tx
+        .select()
+        .from(schema.discoveryTag)
+        .where(eq(schema.discoveryTag.name, 'comfort food'))
+    ).at(0)
+    assert(
+      course && cuisine && diet && tag,
+      'Required taxonomy is missing. Run npm run db:seed:taxonomy first.',
+    )
     await tx
       .insert(schema.recipeCourse)
       .values(

@@ -56,17 +56,52 @@ empty volume; editing `.env.local` does not change an existing database password
 Do not change the PostgreSQL major image version on an existing volume without
 planning a database upgrade.
 
+## Categories and tags
+
+`scripts/seed-taxonomy.ts` seeds the shared courses, cuisines, dietary preferences,
+and discovery tags. Run it after migrations in local, remote test, or production:
+
+```sh
+npm run db:seed:taxonomy
+```
+
+It inserts missing names in one transaction, skips existing names, and never
+updates or deletes existing rows. It creates no sample users or recipes; the
+sample-only custom tag stays in the fixture script. Run it again whenever the
+taxonomy list grows. Seed names are normalized to lowercase before insertion, so
+changing capitalization does not create another entry. Database checks require
+lowercase names (including custom tags), and unique constraints prevent duplicates.
+Other writers must lowercase names before insertion and normalize name lookups too.
+The normalization migration lowercases existing categories while retaining IDs and
+recipe links. If case-only duplicates already exist, it rolls back rather than
+silently merging or deleting data; resolve those duplicates before retrying.
+
+Like Drizzle, it reads `.env.local`, then `.env`, or only the file selected by
+`DB_ENV_FILE`. A missing selected file fails rather than falling back locally.
+Exported environment variables take precedence. For example, after migrating
+the remote test database:
+
+```sh
+DB_ENV_FILE=.env.staging.local npm run db:seed:taxonomy
+```
+
+Use the corresponding private environment file for production, or inject
+`DATABASE_URL` through deployment/CI secrets and run `npm run db:seed:taxonomy`.
+The runtime executing these TypeScript scripts needs the installed `tsx` and
+`dotenv` development dependencies. No remote database is seeded automatically.
+
 ## Visual testing fixtures
 
 With the local database running and migrations applied:
 
 ```sh
+npm run db:seed:taxonomy # Seed required categories and tags first
 npm run db:seed        # Create or replace the sample data; prints recipe URLs
 npm run db:seed:clear  # Delete the sample users, recipes, and their detail data
 npm run db:seed        # Recreate them with the same user and recipe IDs
 ```
 
-The seed creates Maya Santos, Leo Rivera, and Sam Chen, plus five recipes:
+`scripts/seed.ts` creates Maya Santos, Leo Rivera, and Sam Chen, plus five recipes:
 Spicy Chicken Adobo (full details), Mushroom Adobo (a fork), Simple Toast (empty
 collections and optional fields), Private Family Soup, and Unfinished Pancakes.
 The last two should show “Recipe not found” to anonymous visitors. Image keys
@@ -80,9 +115,10 @@ The script reads `.env.local`, then `.env`, with exported variables taking
 precedence. It only accepts a local `sapori_dev` database and refuses production
 mode. Replacement runs in a transaction and includes a small relational smoke
 check. Cleanup targets reserved fixture IDs rather than truncating tables;
-unexpected foreign-key references abort and roll back the operation. Shared
-taxonomy names (Dinner, Filipino, Vegetarian, Comfort food) are reused and
-retained after cleanup.
+unexpected foreign-key references abort and roll back the operation. It looks
+up the required taxonomy names (dinner, filipino, vegetarian, comfort food) and
+fails with an instruction to run the taxonomy seed if any are missing. Shared
+taxonomy is retained after cleanup; the sample custom tag is deleted.
 
 ## Schema changes
 
@@ -113,7 +149,7 @@ For an explicit remote migration from this workspace, create a private
 DB_ENV_FILE=.env.staging.local npm run db:migrate
 ```
 
-`DB_ENV_FILE` selects only that file for Drizzle commands and fails if it cannot
+`DB_ENV_FILE` selects only that file for Drizzle commands and the taxonomy seed, and fails if it cannot
 be loaded. It does not select the app's runtime environment. By default Drizzle
 reads `.env.local`, then `.env`; exported environment variables always take
 precedence. Check for an already-exported `DATABASE_URL` before selecting a target.
