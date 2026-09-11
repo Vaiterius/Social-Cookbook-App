@@ -55,37 +55,64 @@ export const recipeVisibility = pgEnum('recipe_visibility', [
 ])
 export const recipeStatus = pgEnum('recipe_status', ['draft', 'published'])
 
-export const recipe = pgTable('recipe', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  authorId: uuid('author_id')
-    .notNull()
-    .references(() => user.id),
-  title: varchar('title', { length: 100 }),
-  caption: varchar('caption', { length: 250 }),
-  coverImageKey: text('cover_image_key'),
-  prepTimeMinutes: integer('prep_time_minutes'),
-  cookTimeMinutes: integer('cook_time_minutes'),
-  servings: integer('servings'),
-  difficulty: recipeDifficulty('difficulty'),
-  authorsNote: varchar('authors_note', { length: 250 }),
-  calories: integer('calories'),
-  proteinGrams: integer('protein_grams'),
-  carbsGrams: integer('carbs_grams'),
-  fatGrams: integer('fat_grams'),
-  fiberGrams: integer('fiber_grams'),
-  visibility: recipeVisibility('visibility').notNull(),
-  status: recipeStatus('status').notNull(),
-  sourceName: text('source_name'),
-  sourceURL: text('source_url'),
-  createdAt: timestamp('created_at', { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-  updatedAt: timestamp('updated_at', { withTimezone: true })
-    .defaultNow()
-    .$onUpdate(() => new Date())
-    .notNull(),
-  deletedAt: timestamp('deleted_at', { withTimezone: true }),
-})
+export const recipe = pgTable(
+  'recipe',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    authorId: uuid('author_id')
+      .notNull()
+      .references(() => user.id),
+    title: varchar('title', { length: 100 }),
+    caption: varchar('caption', { length: 250 }),
+    coverImageKey: text('cover_image_key'),
+    prepTimeMinutes: integer('prep_time_minutes'),
+    cookTimeMinutes: integer('cook_time_minutes'),
+    servings: integer('servings'),
+    difficulty: recipeDifficulty('difficulty'),
+    authorsNote: varchar('authors_note', { length: 250 }),
+    calories: integer('calories'),
+    proteinGrams: integer('protein_grams'),
+    carbsGrams: integer('carbs_grams'),
+    fatGrams: integer('fat_grams'),
+    fiberGrams: integer('fiber_grams'),
+    visibility: recipeVisibility('visibility').notNull(),
+    status: recipeStatus('status').notNull(),
+    sourceName: text('source_name'),
+    sourceURL: text('source_url'),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+    deletedAt: timestamp('deleted_at', { withTimezone: true }),
+  },
+  (table) => [
+    // Drafts may be incomplete; enforce publication completeness for every writer.
+    // deletedAt is lifecycle metadata and must remain nullable for active recipes.
+    check(
+      'recipe_published_fields_required',
+      sql`${table.status} = 'draft' or (
+          ${table.title} is not null
+          and ${table.caption} is not null
+          and ${table.coverImageKey} is not null
+          and ${table.prepTimeMinutes} is not null
+          and ${table.cookTimeMinutes} is not null
+          and ${table.servings} is not null
+          and ${table.difficulty} is not null
+          and ${table.authorsNote} is not null
+          and ${table.calories} is not null
+          and ${table.proteinGrams} is not null
+          and ${table.carbsGrams} is not null
+          and ${table.fatGrams} is not null
+          and ${table.fiberGrams} is not null
+          and ${table.sourceName} is not null
+          and ${table.sourceURL} is not null
+      )`,
+    ),
+  ],
+)
 
 /* RECIPE INGREDIENT MODEL */
 export const recipeIngredient = pgTable(

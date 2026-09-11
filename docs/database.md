@@ -103,7 +103,12 @@ npm run db:seed        # Recreate them with the same user and recipe IDs
 
 `scripts/seed.ts` creates Maya Santos, Leo Rivera, and Sam Chen, plus five recipes:
 Spicy Chicken Adobo (full details), Mushroom Adobo (a fork), Simple Toast (empty
-collections and optional fields), Private Family Soup, and Unfinished Pancakes.
+collections), Private Family Soup, and Unfinished Pancakes (an incomplete draft).
+All four published recipes have complete recipe-row content. Nutrition values,
+source URLs, and image keys are sample data for display testing.
+Each published recipe also gets a `recipe_published` activity. `/following`
+shows the three public recipes; the private publication is filtered out and
+the draft has no activity. Sample cleanup deletes these activities before recipes.
 The last two should show “Recipe not found” to anonymous visitors. Image keys
 are placeholders for plain-text display; no image files are created.
 
@@ -119,6 +124,32 @@ unexpected foreign-key references abort and roll back the operation. It looks
 up the required taxonomy names (dinner, filipino, vegetarian, comfort food) and
 fails with an instruction to run the taxonomy seed if any are missing. Shared
 taxonomy is retained after cleanup; the sample custom tag is deleted.
+
+## Recipe publication completeness
+
+`recipe_published_fields_required` rejects inserts or updates that leave a
+published recipe with null content fields. Drafts may omit content. Published
+recipes require title, caption, cover image key, preparation/cooking times,
+servings, difficulty, author's note, all five nutrition values, source name,
+and source URL. This applies to private and public recipes alike. `deletedAt`
+remains nullable because it describes lifecycle state, not recipe completeness.
+
+The check enforces non-null recipe-row fields; it does not validate empty strings,
+URL/image availability, numeric ranges, or related ingredient/instruction rows.
+When the publishing endpoint is implemented, validate publication input on the
+server as well as in the editor and return useful field errors. Frontend checks
+alone cannot protect writes made by direct requests or scripts.
+
+The migration validates existing rows and fails if any published recipes are
+incomplete; it does not invent content or change their publication status.
+For the old local fixtures, run `npm run db:seed:clear` before `npm run db:migrate`,
+then `npm run db:seed` to recreate complete fixtures. Other environments must
+correct their existing incomplete published rows before migrating.
+
+Running `npm run db:seed` also checks that the database accepts the complete
+published fixtures and incomplete draft, rejects an incomplete published insert,
+rejects publishing the incomplete draft, and rejects nulling each required field
+on an already-published recipe. Expected failures use transaction savepoints.
 
 ## Schema changes
 

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { config } from 'dotenv'
-import { eq, inArray } from 'drizzle-orm'
+import { eq, getTableColumns, inArray } from 'drizzle-orm'
 import { drizzle } from 'drizzle-orm/node-postgres'
 import { Pool } from 'pg'
 import * as schema from '../src/db/schema'
@@ -57,10 +57,19 @@ const recipes = [
     authorId: userIds[1],
     title: 'Mushroom Adobo',
     caption: 'A meat-free variation of Maya’s adobo.',
+    coverImageKey: 'seed/mushroom-adobo-cover.jpg',
     prepTimeMinutes: 10,
     cookTimeMinutes: 20,
     servings: 2,
     difficulty: 'easy',
+    authorsNote: 'Brown the mushrooms before adding the sauce.',
+    calories: 180,
+    proteinGrams: 8,
+    carbsGrams: 16,
+    fatGrams: 10,
+    fiberGrams: 4,
+    sourceName: 'Maya’s chicken adobo',
+    sourceURL: 'https://example.com/recipes/adobo',
     visibility: 'public',
     status: 'published',
   },
@@ -68,7 +77,20 @@ const recipes = [
     id: recipeIds[2],
     authorId: userIds[2],
     title: 'Simple Toast',
-    caption: 'Exercises empty collections and missing optional fields.',
+    caption: 'Crisp toast for a simple breakfast.',
+    coverImageKey: 'seed/toast-cover.jpg',
+    prepTimeMinutes: 0,
+    cookTimeMinutes: 3,
+    servings: 1,
+    difficulty: 'easy',
+    authorsNote: 'Serve immediately while warm.',
+    calories: 160,
+    proteinGrams: 6,
+    carbsGrams: 28,
+    fatGrams: 2,
+    fiberGrams: 4,
+    sourceName: 'Sam’s kitchen',
+    sourceURL: 'https://example.com/recipes/toast',
     visibility: 'public',
     status: 'published',
   },
@@ -76,6 +98,20 @@ const recipes = [
     id: recipeIds[3],
     authorId: userIds[0],
     title: 'Private Family Soup',
+    caption: 'A warming vegetable soup from Maya’s kitchen.',
+    coverImageKey: 'seed/soup-cover.jpg',
+    prepTimeMinutes: 15,
+    cookTimeMinutes: 30,
+    servings: 4,
+    difficulty: 'easy',
+    authorsNote: 'Cut the vegetables evenly so they cook together.',
+    calories: 150,
+    proteinGrams: 5,
+    carbsGrams: 22,
+    fatGrams: 5,
+    fiberGrams: 6,
+    sourceName: 'Maya’s family recipe',
+    sourceURL: 'https://example.com/recipes/soup',
     visibility: 'private',
     status: 'published',
   },
@@ -114,6 +150,7 @@ try {
       schema.savedRecipe,
       schema.madeThis,
       schema.recipePersonalNote,
+      schema.activity,
     ]) {
       await tx.delete(table).where(inArray(table.recipeId, recipeIds))
     }
@@ -151,6 +188,70 @@ try {
       })),
     )
     await tx.insert(schema.recipe).values(recipes)
+    // Publication events are separate rows; recipe status alone cannot populate the feed.
+    // Include the private publication to exercise the feed's visibility check.
+    await tx.insert(schema.activity).values(
+      recipes
+        .filter((recipe) => recipe.status === 'published')
+        .map((recipe) => ({
+          actorId: recipe.authorId,
+          recipeId: recipe.id,
+          type: 'recipe_published' as const,
+        })),
+    )
+    const publications = await tx
+      .select({ recipeId: schema.activity.recipeId })
+      .from(schema.activity)
+      .where(inArray(schema.activity.recipeId, recipeIds))
+    assert.deepEqual(
+      publications.map(({ recipeId }) => recipeId).sort(),
+      recipeIds.slice(0, 4).sort(),
+    )
+
+    // Savepoints let expected database rejections leave the seed transaction usable.
+    const publicationError = (error: unknown) => {
+      const cause = error instanceof Error ? error.cause : undefined
+      return (
+        cause instanceof Error &&
+        'code' in cause &&
+        cause.code === '23514' &&
+        'constraint' in cause &&
+        cause.constraint === 'recipe_published_fields_required'
+      )
+    }
+    await assert.rejects(
+      tx.transaction(async (savepoint) => {
+        await savepoint.insert(schema.recipe).values({
+          authorId: userIds[0],
+          visibility: 'public',
+          status: 'published',
+        })
+      }),
+      publicationError,
+    )
+    for (const [field, column] of Object.entries(
+      getTableColumns(schema.recipe),
+    )) {
+      if (column.notNull || field === 'deletedAt') continue
+      await assert.rejects(
+        tx.transaction(async (savepoint) => {
+          await savepoint
+            .update(schema.recipe)
+            .set({ [field]: null })
+            .where(eq(schema.recipe.id, recipeIds[0]))
+        }),
+        publicationError,
+      )
+    }
+    await assert.rejects(
+      tx.transaction(async (savepoint) => {
+        await savepoint
+          .update(schema.recipe)
+          .set({ status: 'published' })
+          .where(eq(schema.recipe.id, recipeIds[4]))
+      }),
+      publicationError,
+    )
 
     for (const [index, mainIngredient] of [
       'Chicken thighs',
@@ -305,8 +406,8 @@ try {
 
   console.log(
     clearOnly
-      ? 'Seed users and recipes deleted.'
-      : 'Seeded 3 users and 5 recipes. Smoke check passed.',
+      ? 'Seed users, recipes, and activities deleted.'
+      : 'Seeded 3 users, 5 recipes, and 4 publication activities. Smoke check passed.',
   )
   if (!clearOnly) {
     for (const recipe of recipes) {
