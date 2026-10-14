@@ -11,7 +11,7 @@ This document serves as the absolute source of truth for the Sapori app's design
 ## 2. Layout Architecture
 
 - **Desktop:** Responsive layout with a **left sidebar** for flattened navigation.
-- **Mobile/Tablet:** Uses a semi-glassmorphic **bottom navbar** island for grouped navigation.
+- **Mobile/Tablet:** Uses a semi-glassmorphic **bottom navbar** island for grouped navigation. Allow UI to feel native mobile-like, including gestures and layouts, during smaller-than-desktop viewports.
 - **Recipe Creation Flow:** Uses sliding drawers/modals. It features smart prep/cook time inputs and an advanced ingredient tagging system allowing partial quantity distribution across steps.
 
 ## 3. Typography

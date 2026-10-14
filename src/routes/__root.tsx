@@ -2,6 +2,7 @@ import {
   HeadContent,
   Scripts,
   createRootRouteWithContext,
+  useMatchRoute,
 } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
@@ -42,12 +43,22 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 })
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+  const matchRoute = useMatchRoute()
+  const isExplore = Boolean(matchRoute({ to: '/', fuzzy: false }))
+
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      className={
+        isExplore ? 'scrollbar-none h-dvh overflow-hidden' : 'scrollbar-none'
+      }
+    >
       <head>
         <HeadContent />
       </head>
-      <body className="min-h-screen font-sans antialiased [wrap-anywhere]">
+      <body
+        className={`min-h-dvh font-sans antialiased [wrap-anywhere] ${isExplore ? 'h-dvh overflow-hidden' : ''}`}
+      >
         {children}
         <TanStackDevtools
           config={{

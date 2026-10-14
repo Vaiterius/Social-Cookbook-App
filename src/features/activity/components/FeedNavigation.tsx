@@ -3,7 +3,7 @@ import { Link } from '@tanstack/react-router'
 export default function FeedNavigation() {
   return (
     <nav aria-label="Feeds" className="md:hidden">
-      <ul>
+      <ul className="flex space-x-4">
         <li>
           <Link to="/" activeOptions={{ exact: true }}>
             Explore
