@@ -2,12 +2,12 @@ import {
   HeadContent,
   Scripts,
   createRootRouteWithContext,
-  useMatchRoute,
 } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
+import PageLayout from '#/components/PageLayout'
 
 import appCss from '../styles.css?url'
 
@@ -38,27 +38,17 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       },
     ],
   }),
-  notFoundComponent: () => <p>Page not found.</p>,
+  notFoundComponent: () => <PageLayout header={<h1>Page not found.</h1>} />,
   shellComponent: RootDocument,
 })
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-  const matchRoute = useMatchRoute()
-  const isExplore = Boolean(matchRoute({ to: '/', fuzzy: false }))
-
   return (
-    <html
-      lang="en"
-      className={
-        isExplore ? 'scrollbar-none h-dvh overflow-hidden' : 'scrollbar-none'
-      }
-    >
+    <html lang="en" className="scrollbar-none h-dvh overflow-hidden">
       <head>
         <HeadContent />
       </head>
-      <body
-        className={`min-h-dvh font-sans antialiased [wrap-anywhere] ${isExplore ? 'h-dvh overflow-hidden' : ''}`}
-      >
+      <body className="h-dvh overflow-hidden font-sans antialiased [wrap-anywhere]">
         {children}
         <TanStackDevtools
           config={{

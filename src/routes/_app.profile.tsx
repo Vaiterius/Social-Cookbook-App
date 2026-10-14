@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import PageLayout from '#/components/PageLayout'
 import AccountNavigation from '../features/users/components/AccountNavigation'
 
 export const Route = createFileRoute('/_app/profile')({
@@ -7,9 +8,8 @@ export const Route = createFileRoute('/_app/profile')({
 
 function ProfilePage() {
   return (
-    <>
-      <h1>Profile</h1>
+    <PageLayout header={<h1>Profile</h1>}>
       <AccountNavigation />
-    </>
+    </PageLayout>
   )
 }

@@ -1,4 +1,5 @@
 import { Outlet, createFileRoute } from '@tanstack/react-router'
+import PageLayout from '#/components/PageLayout'
 import LibraryNavigation from '../components/navigation/LibraryNavigation'
 
 export const Route = createFileRoute('/_app/library')({
@@ -7,9 +8,15 @@ export const Route = createFileRoute('/_app/library')({
 
 function LibraryLayout() {
   return (
-    <>
-      <LibraryNavigation />
+    <PageLayout
+      header={
+        <>
+          <h1>Library</h1>
+          <LibraryNavigation />
+        </>
+      }
+    >
       <Outlet />
-    </>
+    </PageLayout>
   )
 }

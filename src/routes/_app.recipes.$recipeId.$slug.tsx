@@ -4,6 +4,7 @@ import {
   notFound,
   redirect,
 } from '@tanstack/react-router'
+import PageLayout from '#/components/PageLayout'
 import { fetchRecipeDetail } from '#/features/recipes/functions/recipe-detail.functions'
 import { recipeSlug } from '#/features/recipes/recipe-slug'
 import { isUuid } from '#/features/recipes/validation/recipe-detail'
@@ -31,9 +32,21 @@ export const Route = createFileRoute('/_app/recipes/$recipeId/$slug')({
     return detail
   },
   headers: () => ({ 'Cache-Control': 'private, no-store' }),
-  pendingComponent: () => <p>Loading recipe...</p>,
-  notFoundComponent: () => <p>Recipe not found.</p>,
-  errorComponent: () => <p>Unable to load recipe.</p>,
+  pendingComponent: () => (
+    <PageLayout header={<h1>Recipe</h1>}>
+      <p>Loading recipe...</p>
+    </PageLayout>
+  ),
+  notFoundComponent: () => (
+    <PageLayout header={<h1>Recipe</h1>}>
+      <p>Recipe not found.</p>
+    </PageLayout>
+  ),
+  errorComponent: () => (
+    <PageLayout header={<h1>Recipe</h1>}>
+      <p>Unable to load recipe.</p>
+    </PageLayout>
+  ),
   component: RecipeDetailPage,
 })
 
@@ -71,7 +84,10 @@ function RecipeDetailPage() {
   }
 
   return (
-    <div className="p-4 whitespace-pre-wrap">
+    <PageLayout
+      header={<h1>{recipe.title ?? 'Untitled recipe'}</h1>}
+      contentClassName="whitespace-pre-wrap"
+    >
       {Object.entries(fields).map(([label, value]) => (
         <p key={label}>
           {label}: {value === null || value === '' ? 'Not provided' : value}
@@ -140,6 +156,6 @@ function RecipeDetailPage() {
       </p>
       <p>Made: {viewerState ? String(viewerState.hasMade) : 'Not signed in'}</p>
       <p>Personal note: {viewerState?.personalNote ?? 'None'}</p>
-    </div>
+    </PageLayout>
   )
 }

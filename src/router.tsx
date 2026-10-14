@@ -11,6 +11,7 @@ export function getRouter() {
     routeTree,
     context,
     scrollRestoration: true,
+    scrollToTopSelectors: ['#page-content'],
     defaultPreload: 'intent',
     defaultPreloadStaleTime: 0,
   })

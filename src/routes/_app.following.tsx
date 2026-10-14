@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import PageLayout from '#/components/PageLayout'
 import FeedNavigation from '../features/activity/components/FeedNavigation'
 import ActivityCard from '#/features/activity/components/ActivityCard'
 import { fetchFollowingFeed } from '#/features/activity/functions/following-feed.functions'
@@ -6,17 +7,30 @@ import { fetchFollowingFeed } from '#/features/activity/functions/following-feed
 export const Route = createFileRoute('/_app/following')({
   loader: () => fetchFollowingFeed(),
   headers: () => ({ 'Cache-Control': 'no-store' }),
-  pendingComponent: () => <p role="status">Loading activities...</p>,
-  errorComponent: () => <p role="alert">Unable to load activities.</p>,
+  pendingComponent: () => (
+    <PageLayout header={<h1>Following feed</h1>}>
+      <p role="status">Loading activities...</p>
+    </PageLayout>
+  ),
+  errorComponent: () => (
+    <PageLayout header={<h1>Following feed</h1>}>
+      <p role="alert">Unable to load activities.</p>
+    </PageLayout>
+  ),
   component: FollowingPage,
 })
 
 function FollowingPage() {
   const { items, asOf } = Route.useLoaderData()
   return (
-    <>
-      <FeedNavigation />
-      <h1>Following feed</h1>
+    <PageLayout
+      header={
+        <>
+          <FeedNavigation />
+          <h1>Following feed</h1>
+        </>
+      }
+    >
       {items.length === 0 ? (
         <p>No published recipe activities yet.</p>
       ) : (
@@ -28,6 +42,6 @@ function FollowingPage() {
           ))}
         </ul>
       )}
-    </>
+    </PageLayout>
   )
 }
