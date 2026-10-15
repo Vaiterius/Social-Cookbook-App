@@ -9,6 +9,7 @@ export const Route = createFileRoute('/_app/')({ component: HomePage })
 function HomePage() {
   return (
     <PageLayout
+      centered
       header={
         <>
           <FeedNavigation />
@@ -51,11 +52,14 @@ function HomePage() {
         <p role="status" className="sr-only">
           Loading discover items...
         </p>
-        <ScrollRow label="Discover">
-          {[0, 1, 2, 3, 4].map((index) => (
-            <li key={index} aria-hidden="true" className="shrink-0">
-              <Skeleton className="h-32 w-48" />
-              <Skeleton className="mt-4 h-4 w-32" />
+        <ScrollRow
+          label="Discover"
+          paged
+          className="[--columns:2] sm:max-md:grid-rows-2 md:max-[1025px]:grid-rows-2 md:max-[1025px]:[--columns:3] min-[1025px]:max-xl:[--columns:4] xl:[--columns:5]"
+        >
+          {Array.from({ length: 20 }, (_, index) => (
+            <li key={index} aria-hidden="true" className="min-w-0 snap-start">
+              <Skeleton className="h-20 w-full sm:h-24 md:h-28 min-[1025px]:h-32" />
             </li>
           ))}
         </ScrollRow>
@@ -90,12 +94,14 @@ function HomePage() {
         <p role="status" className="sr-only">
           Loading recipes...
         </p>
-        <ScrollRow label="Explore recipes">
-          {[0, 1, 2, 3].map((index) => (
-            <li key={index} aria-hidden="true" className="shrink-0">
-              <Skeleton className="h-40 w-56 rounded-2xl" />
-              <Skeleton className="mt-4 h-5 w-40" />
-              <Skeleton className="mt-4 h-4 w-24" />
+        <ScrollRow
+          label="Explore recipes"
+          paged
+          className="grid-rows-4 [--columns:2] md:max-[1025px]:grid-rows-3 md:max-[1025px]:[--columns:3] min-[1025px]:grid-rows-2 min-[1025px]:gap-y-8 min-[1025px]:max-xl:[--columns:4] xl:[--columns:5]"
+        >
+          {Array.from({ length: 20 }, (_, index) => (
+            <li key={index} aria-hidden="true" className="min-w-0 snap-start">
+              <Skeleton className="h-24 w-full rounded-2xl sm:h-28 md:h-32 min-[1025px]:h-40" />
             </li>
           ))}
         </ScrollRow>
@@ -113,11 +119,15 @@ function HomePage() {
         <p role="status" className="sr-only">
           Loading cooks...
         </p>
-        <ScrollRow label="Explore our cooks">
-          {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((index) => (
-            <li key={index} aria-hidden="true" className="shrink-0">
-              <Skeleton className="size-20 rounded-full" />
-              <Skeleton className="mt-4 h-4 w-20" />
+        <ScrollRow
+          label="Explore our cooks"
+          paged
+          className="[--columns:4] md:max-[1025px]:[--columns:5] min-[1025px]:[--columns:8]"
+        >
+          {Array.from({ length: 16 }, (_, index) => (
+            <li key={index} aria-hidden="true" className="min-w-0 snap-start">
+              <Skeleton className="aspect-square w-full rounded-full" />
+              <Skeleton className="mt-3 h-3 w-full sm:mt-4 md:h-4" />
             </li>
           ))}
         </ScrollRow>
@@ -135,11 +145,15 @@ function HomePage() {
         <p role="status" className="sr-only">
           Loading cookbooks...
         </p>
-        <ScrollRow label="Explore cookbooks">
-          {[0, 1, 2].map((index) => (
-            <li key={index} aria-hidden="true" className="shrink-0">
-              <Skeleton className="h-48 w-80 rounded-2xl md:w-md" />
-              <Skeleton className="mt-4 h-5 w-56" />
+        <ScrollRow
+          label="Explore cookbooks"
+          paged
+          className="[--columns:1] md:max-xl:[--columns:2] min-[1025px]:grid-rows-2 min-[1025px]:gap-y-8 xl:[--columns:3]"
+        >
+          {Array.from({ length: 12 }, (_, index) => (
+            <li key={index} aria-hidden="true" className="min-w-0 snap-start">
+              <Skeleton className="h-28 w-full rounded-2xl sm:h-32 md:h-40 min-[1025px]:h-48" />
+              <Skeleton className="mt-3 h-3 w-2/3 sm:mt-4 sm:h-4 md:h-5" />
             </li>
           ))}
         </ScrollRow>
@@ -157,7 +171,10 @@ function HomePage() {
         <p role="status" className="sr-only">
           Loading popular tags...
         </p>
-        <ScrollRow label="Popular tags">
+        <ScrollRow
+          label="Popular tags"
+          className="min-[1025px]:grid min-[1025px]:grid-flow-col min-[1025px]:grid-rows-2 min-[1025px]:auto-cols-max min-[1025px]:gap-y-8"
+        >
           {[0, 1, 2, 3, 4, 6, 7, 8, 9].map((index) => (
             <li key={index} aria-hidden="true" className="shrink-0">
               <Skeleton className="h-8 w-24 rounded-full" />

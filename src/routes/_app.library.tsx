@@ -9,6 +9,8 @@ export const Route = createFileRoute('/_app/library')({
 function LibraryLayout() {
   return (
     <PageLayout
+      centered
+      contentClassName="pb-40 md:pb-48"
       header={
         <>
           <h1>Library</h1>

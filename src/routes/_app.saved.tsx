@@ -7,6 +7,8 @@ export const Route = createFileRoute('/_app/saved')({ component: SavedLayout })
 function SavedLayout() {
   return (
     <PageLayout
+      centered
+      contentClassName="pb-40 md:pb-48"
       header={
         <>
           <h1>Saved</h1>
