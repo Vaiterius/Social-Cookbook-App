@@ -10,7 +10,7 @@ This document serves as the absolute source of truth for the Sapori app's design
 
 ## 2. Layout Architecture
 
-- **Desktop:** Responsive layout with a **left sidebar** for flattened navigation.
+- **Desktop:** Responsive layout with a fixed-width **18rem left sidebar** for flattened navigation, with equal horizontal padding around link boxes.
 - **Mobile/Tablet:** Uses a semi-glassmorphic **bottom navbar** island for grouped navigation. Allow UI to feel native mobile-like, including gestures and layouts, during smaller-than-desktop viewports.
 - **Recipe Creation Flow:** Uses sliding drawers/modals. It features smart prep/cook time inputs and an advanced ingredient tagging system allowing partial quantity distribution across steps.
 
@@ -21,6 +21,7 @@ We use two main fonts configured in Tailwind v4 (`src/index.css`):
 - **Headings (`font-fraunces`):** Use for recipe titles, major headings (`h1`, `h2`), and editorial moments.
 - **Body & UI (`font-outfit`):** Use for all body text, buttons, inputs, captions, and general UI.
 - **Accents (`font-pacifico`):** Use extremely sparingly for playful, stylistic signatures.
+- **Site title (`font-pacifico`):** Use regular-weight Pacifico in the primary burgundy color.
 
 ## 4. Color Palette & Usage (Raw Tokens)
 
@@ -53,10 +54,12 @@ Use exact Tailwind variables defined in the `@theme` block. When custom SVGs, ca
 - **Primary Action:** `bg-burgundy text-white`. Use for primary buttons, active states, and major emphasis.
 - **Secondary/Fresh:** `bg-olive` and `bg-olive-dark`. Use for secondary actions, healthy tags, or success states.
 - **Text Hierarchy:**
+  - `text-neutral-800`: Global heading color for softer contrast than near-black.
   - `text-neutral-900` / `text-neutral-950`: Primary copy.
   - `text-neutral-800`: Tertiary emphasis (dark brown).
   - `text-neutral-600` / `text-neutral-500`: Muted text (descriptions, timestamps, empty states).
 - **Borders:** `border-neutral-200` or `border-neutral-300`.
+- **Destructive actions:** Use `text-destructive` for the logout label and icon.
 
 ## 5. UI Components & States
 

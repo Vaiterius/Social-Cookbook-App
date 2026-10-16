@@ -1,0 +1,37 @@
+.menu {
+  position: fixed;
+  inset: auto;
+  margin: 0.5rem 0 0;
+  opacity: 0;
+  transform: translateY(-0.5rem);
+  transition:
+    opacity 300ms ease-in-out,
+    transform 300ms ease-in-out,
+    display 300ms allow-discrete,
+    overlay 300ms allow-discrete;
+}
+
+.menu:popover-open {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@starting-style {
+  .menu:popover-open {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu {
+    transition: none;
+    transform: none;
+  }
+}
+
+@media (width < 48rem) {
+  .menu {
+    display: none;
+  }
+}

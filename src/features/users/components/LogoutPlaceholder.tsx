@@ -1,4 +1,6 @@
-import SvgIcon from '#/components/icons/SvgIcon'
+import SidebarIcon from '#/components/navigation/SidebarIcon'
+import { sidebarLinkClassName } from '#/components/navigation/sidebarStyles'
+import { cn } from '#/lib/utils'
 import logOut from '#/components/icons/log-out.svg'
 
 /** Disabled until sign-out is implemented; the sidebar variant matches its icon navigation. */
@@ -11,13 +13,13 @@ export default function LogoutPlaceholder({
     <button
       type="button"
       disabled
-      className={
-        sidebar
-          ? 'flex min-h-11 items-center gap-3 text-left disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50'
-          : undefined
-      }
+      className={cn(
+        sidebar && sidebarLinkClassName,
+        'text-destructive hover:text-destructive focus-visible:text-destructive',
+        sidebar && 'py-1.5 text-sm',
+      )}
     >
-      {sidebar && <SvgIcon src={logOut} />}
+      {sidebar && <SidebarIcon src={logOut} />}
       Logout (coming soon)
     </button>
   )

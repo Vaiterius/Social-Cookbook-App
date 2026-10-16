@@ -1,0 +1,2 @@
+export const sidebarLinkClassName =
+  'group flex min-h-11 w-full items-center gap-3 font-bold rounded-xl px-3.5 py-3.5 text-left transition-colors duration-300 ease-in-out data-[status=active]:bg-neutral-100 data-[status=active]:text-neutral-900 hover:bg-neutral-100 hover:text-neutral-900 focus-visible:bg-neutral-100 focus-visible:text-neutral-900 focus-visible:ring-2 focus-visible:ring-olive focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50'

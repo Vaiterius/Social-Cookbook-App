@@ -157,6 +157,15 @@ button[data-tsd-control][aria-label='Open TanStack Devtools'] {
   }
 
   h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply text-neutral-800;
+  }
+
+  h1,
   h2 {
     @apply font-fraunces font-semibold;
   }
